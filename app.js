@@ -1,122 +1,111 @@
-var schedule = require('node-schedule');
 var fs = require('fs');
-const desktopPath = 'C:/Users/Administrator/Desktop/';
-const targetPath = 'F:/博客截图/';
-const metaInfo = 'blog';
+var Promise = require('bluebird');
+Promise.promisifyAll(fs);
 
-/**
- * 轮询桌面
- * @return {[type]} [description]
- */
-function poll(){
-	console.log('--------开始----------')
-	schedule.scheduleJob('30 * * * * *', function(){
-  		console.log('每分钟的30S都会执行!:' + (new Date).toLocaleTimeString());
-	}); 
+var config = {};
+config.srcPath = 'C:/Users/Administrator/Desktop/';
+config.targetPath = 'F:/blogShortCut/';
+config.re = new RegExp(".png");
+
+var logger = new logg();
+
+document.getElementById('start').addEventListener('click', function(event) {
+    doCollection();
+}, false)
+
+var logDom = document.getElementById('log');
+
+//开始收集图片
+function doCollection() {
+    logger.info('开始执行...');
+    getFitImg();
 }
 
-/**
- * 访问桌面
- * @return {[type]} [description]
- */
-function visitDesk(){
-	console.log('--------开始访问桌面----------')
-	fs.readdir(desktopPath,function(err, files){
-	   if (err) {
-	       return console.error(err);
-	   }
-	   files.forEach( function (file){
-	       if(file && judgeImage(file)){
-	       		//console.log('图片类型:' + file);
-	       		saveImageToFile(file);
-	       }
-	   });
-	});
+//选取合适的资源
+function getFitImg() {
+    fs.readdirAsync(config.srcPath).then(function(files) {
+            var imgs = [];
+            files.forEach(function(item) {
+                if ((config.re).test(item)) imgs.push(item);;
+            })
+            logger.info('符合条件的图片数:' + imgs.length);
+
+            return imgs;
+        })
+        .then(function(results) {
+            if (results.length) {
+                logger.info('开始文件操作...')
+                imgIntoFile(results);
+            }else{
+                logger.info('无图');
+            }
+        })
+        .catch(function(err) {
+            logger.error(err);
+        })
 }
 
-/**
- * 判断文件类型，取出我们需要的png图片
- * @return {[type]} [description]
- */
-function judgeImage(file){
-	var postfix = getPostfix(file);
-	if(postfix === 'png' && file.indexOf(metaInfo) > -1){
-		return file;
-	}
+//写入文件
+function imgIntoFile(aImgs) {
+    var dir = config.targetPath + createDate();
+    fs.existsAsync(dir).then(function(exists) {
+        if (!exists) {
+            logger.info('文件夹不存在');
+            createDir(dir);
+        }
+        doImgs(aImgs, dir);
+    })
 }
 
-function getPostfix(file){
-	var dotIndex = file.indexOf('.');
-	var fileLen = file.length;
-	return file.substring(dotIndex+1,fileLen);
+function doImgs(aImgs, target) {
+    aImgs.forEach(function(item) {
+        var itemSrc = config.srcPath + item;
+        var fileReadStream = fs.createReadStream(itemSrc);
+        var fileWriteStream = fs.createWriteStream(target + '/' + item);
+        fileReadStream.pipe(fileWriteStream);
+        //监听流关闭事件
+        fileWriteStream.on('close', function() {
+            logger.info('移动文件成功!');
+            delFile(itemSrc);
+        })
+    })
 }
 
-/**
- * 将获取的图片存入F:\博客截图
- * pipe，它以用来把当前的可读流和另外一个可写流连接起来。可读流中的数据会被自动写入到可写流中
- * @return {[type]} [description]
- */
-function saveImageToFile(file){
-	var fileReadStream = fs.createReadStream(desktopPath + file);
-	var lastPath = targetPath + createDateFolder();
-	if(!isFolderHave(lastPath)){
-		createLastFloder(lastPath);
-	}
-	var fileWriteStream = fs.createWriteStream(lastPath + file);
-	fileReadStream.pipe(fileWriteStream);
-	fileWriteStream.on('close',function(){
-  		console.log('复制成功!');
-  		deleteDeskImage(file);
-
-	})
+//创建文件
+function createDir(dir) {
+    fs.mkdir(dir);
+    logger.info('创建文件夹' + dir + '成功!');
 }
 
-/**
- * 删除桌面文件
- * @param  {[type]} file [description]
- * @return {[type]}      [description]
- */
-function deleteDeskImage(file){
-	fs.unlink(desktopPath + file, function(){
-		console.log('删除成功!')
-	})
+//删除文件
+function delFile(file) {
+    fs.unlink(file);
+    logger.info('删除文件' + file + '成功!');
 }
 
-/**
- * 以系统时间创建文件夹/年月日
- * @return {[type]} [description]
- */
-function createDateFolder(){
-	var day = (new Date).getDate();
-	var month = (new Date).getMonth()+1;
-	var year = (new Date).getFullYear();
-	return year + '_' + month + '_' + day + '/';
+//创建日期
+function createDate() {
+    var day = (new Date).getDate();
+    var month = (new Date).getMonth() + 1;
+    var year = (new Date).getFullYear();
+    return year + '_' + month + '_' + day;
 }
 
-/**
- * 判断文件夹是否存在
- * @return {[type]} [description]
- */
-function isFolderHave(lastPath){
-	fs.exists(lastPath, function(exists){
-		if(exists){
-			return true;
-		}else{
-			return false;
-		}
-	})
+//log
+function logg() {
+    return {
+        info: function(txt) {
+            var pDom = document.createElement('p');
+            var txtDom = document.createTextNode(txt);
+            pDom.appendChild(txtDom);
+            logDom.appendChild(pDom);
+        },
+        error: function(txt) {
+            var pDom = document.createElement('p');
+            var txtDom = document.createTextNode(txt);
+            pDom.appendChild(txtDom);
+            pDom.setAttribute('class', 'error');
+            logDom.appendChild(pDom);
+        }
+    }
 }
-
-/**
- * 创建最终目标文件夹
- * @param  {[type]} lastPath [description]
- * @return {[type]}          [description]
- */
-function createLastFloder(lastPath){
-	fs.mkdir( lastPath, function(){
-		console.log(lastPath + "文件夹创建成功!");
-	})
-}
-
-
-visitDesk();
