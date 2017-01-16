@@ -1,3 +1,11 @@
 ### electron
 使用electron技术来重写这个工具
-![](http://ojlxao0wn.bkt.clouddn.com/blog/2017-01-15_204819.png)
+
+### Log
+
+1.添加基本功能
+
+2.修改样式
+
+### 效果图
+![](http://ojlxao0wn.bkt.clouddn.com/blog/2017-01-16_210139.png)
