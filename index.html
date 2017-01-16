@@ -5,37 +5,45 @@
     <title>保存图片</title>
     <meta charset="utf-8">
     <style type="text/css">
-    	.error{
-    		color: red;
-    	}
+    body{
+        font: 18px/100% "Microsoft yahei","Hiragino Sans GB","Hiragino Sans GB W3",arial,\5b8b\4f53;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .logger{
+        border-bottom: 1px dotted;
+        padding-bottom: 10px;
+    }
+    
+    #start {
+        color: #fff;
+        background-color: #428bca;
+        border-color: #357ebd;
+        border: none;
+        padding: 6px 12px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    #start:hover{
+        background-color: #166bb5;
+    }
     </style>
 </head>
 
 <body>
     <button id="start">整理桌面图片</button>
     <!--打印运行log-->
-    <p>日志打印:</p>
+    <p class="logger">日志打印:</p>
     <div id="log">
     </div>
 </body>
 <script type="text/javascript" src="app.js"></script>
-<!-- <script type="text/javascript">
-function logger(txt) {
-    var pDom = document.createElement('p');
-    var txtDom = document.createTextNode(txt);
-    pDom.appendChild(txtDom);
-    //logDom.appendChild(pDom);
-    return {
-        info: function() {
-            logDom.appendChild(pDom);
-        },
-        error: function() {
-            logDom.appendChild(pDom);
-        }
-    }
-}
-
-
-</script> -->
 
 </html>
