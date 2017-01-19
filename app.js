@@ -5,6 +5,12 @@ Promise.promisifyAll(fs);
 var config = {};
 config.srcPath = document.getElementById('source').value || 'C:/Users/Administrator/Desktop/';
 config.targetPath = document.getElementById('target').value || 'F:/blogShortCut/';
+for(var i=0;i<2;i++){
+  if(document.getElementsByName("sync")[i].checked === "checked"){
+    config.isQiniu = document.getElementsByName("sync")[i].value;
+  }
+}
+
 config.re = new RegExp(".png");
 
 var logger = new logg();
