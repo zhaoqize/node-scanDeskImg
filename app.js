@@ -3,8 +3,8 @@ var Promise = require('bluebird');
 Promise.promisifyAll(fs);
 
 var config = {};
-config.srcPath = 'C:/Users/Administrator/Desktop/';
-config.targetPath = 'F:/blogShortCut/';
+config.srcPath = document.getElementById('source').value || 'C:/Users/Administrator/Desktop/';
+config.targetPath = document.getElementById('target').value || 'F:/blogShortCut/';
 config.re = new RegExp(".png");
 
 var logger = new logg();
