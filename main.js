@@ -1,10 +1,12 @@
 var electron = require('electron');
-
+var Menu = electron.Menu;
 var app = electron.app;
  
 var BrowserWindow = electron.BrowserWindow;
  
 var mainWindow;
+
+const menu = new Menu();
  
 function createWindow(){
     //设置主进程窗口大小
@@ -14,6 +16,9 @@ function createWindow(){
         //titleBarStyle: 'hidden' //mac上的样式
         //transparent: true
         //frame: false
+        //backgroundColor:'#eee',
+        autoHideMenuBar:true
+        //titleBarStyle :"backgroundColor:red"
     })
     
     //主进程启动后打开的页面
@@ -27,7 +32,7 @@ function createWindow(){
  
         mainWindow = null;
     })
- 
+
 }
 
 //应用启动成功后触发ready
