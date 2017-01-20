@@ -7,5 +7,6 @@
 
 2.修改样式
 
+3.七牛
 ### 效果图
 ![](http://ojlxao0wn.bkt.clouddn.com/blog/2017-01-19_201644.png)
