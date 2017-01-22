@@ -1,5 +1,7 @@
 import {Tabs, Tab} from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
+import { observable, computed,autorun } from 'mobx';
+import { observer } from 'mobx-react';
 
 const styles = {
   headline: {
@@ -13,20 +15,43 @@ const styles = {
   },
 };
 
-export default class Layout extends React.Component {
+// store 好几种写法
+class AppStore {
+  @observable slideIndex = 0;
+
+  indexChange (value){
+    this.slideIndex = value;
+  }
+  
+  //每次点击的时候 导致slideIndex变化 squared然后执行中间计算或操作
+  // @computed get squared() {
+  //   return this.slideIndex*10000;
+  // }
+
+}
+
+const age = observable(10)
+
+const dispose = autorun(() => {
+  debugger
+    if (age.get() < 0)
+        throw new Error("Age should not be negative")
+    console.log("Age", age.get())
+})
+
+
+const appState = new AppStore();
+
+@observer
+
+class Layout extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      slideIndex: 0,
-    };
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(value) {
-    this.setState({
-      slideIndex: value,
-    });
+  handleChange = (value) => {
+    appState.indexChange(value)
   };
 
   render() {
@@ -34,14 +59,14 @@ export default class Layout extends React.Component {
       <div>
         <Tabs
           onChange={this.handleChange}
-          value={this.state.slideIndex}
+          value={appState.slideIndex}
         >
           <Tab label="博客" value={0} />
           <Tab label="资讯" value={1} />
           <Tab label="工具" value={2} />
         </Tabs>
         <SwipeableViews
-          index={this.state.slideIndex}
+          index={appState.slideIndex}
           onChangeIndex={this.handleChange}
         >
           <div>
@@ -60,4 +85,4 @@ export default class Layout extends React.Component {
   }
 }
 
-module.exports = Layout;
+export default Layout;
