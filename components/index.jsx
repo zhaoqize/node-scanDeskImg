@@ -17,7 +17,6 @@ const styles = {
 
 
 @observer
-
 class Layout extends React.Component {
 
   constructor(props) {
