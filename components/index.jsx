@@ -1,7 +1,7 @@
 import {Tabs, Tab} from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
-import { observable, computed,autorun } from 'mobx';
 import { observer } from 'mobx-react';
+import appState from './state/states'
 
 const styles = {
   headline: {
@@ -32,6 +32,7 @@ class AppStore {
 
 
 const appState = new AppStore();
+
 
 @observer
 
