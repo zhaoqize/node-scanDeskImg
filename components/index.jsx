@@ -15,24 +15,6 @@ const styles = {
   },
 };
 
-// store 好几种写法
-class AppStore {
-  @observable slideIndex = 0;
-
-  indexChange (value){
-    this.slideIndex = value;
-  }
-  
-  //每次点击的时候 导致slideIndex变化 squared然后执行中间计算或操作
-  // @computed get squared() {
-  //   return this.slideIndex*10000;
-  // }
-
-}
-
-
-const appState = new AppStore();
-
 
 @observer
 
