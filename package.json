@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack-dev-server --port 9090 --devtool cheap-module-eval-source-map --progress --colors --hot --content-base ./"
+    "dev": "webpack-dev-server --port 9090 --devtool cheap-module-eval-source-map --progress --colors --hot --content-base ./",
+    "start" : "node server.js"
   },
   "author": "",
   "license": "ISC",

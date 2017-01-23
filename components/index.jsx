@@ -30,15 +30,6 @@ class AppStore {
 
 }
 
-const age = observable(10)
-
-const dispose = autorun(() => {
-  debugger
-    if (age.get() < 0)
-        throw new Error("Age should not be negative")
-    console.log("Age", age.get())
-})
-
 
 const appState = new AppStore();
 

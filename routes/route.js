@@ -3,6 +3,8 @@ import { Router,
          hashHistory, 
          IndexRoute } from 'react-router';
 
+//import { AppContainer } from 'react-hot-loader';
+
 import IndexLayout from '../components/index.jsx'
 
 //蛋疼的UI
@@ -11,9 +13,11 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 const Main = () => (
-  <MuiThemeProvider>
-    <IndexLayout />
-  </MuiThemeProvider>
+  
+    <MuiThemeProvider>
+      <IndexLayout />
+    </MuiThemeProvider>
+  
 );
 
 var router = (
